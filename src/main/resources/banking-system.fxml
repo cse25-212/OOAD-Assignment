@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="740.0" prefWidth="1160.0" style="-fx-background-color: #f5f5f0; -fx-font-family: 'Segoe UI', Arial, sans-serif;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.bankingsystem.controller.BankingSystemController">
+
+    <!-- Left Obsidian-Forest Navigation Rail -->
+    <left>
+        <VBox prefWidth="236.0" spacing="16.0" style="-fx-background-color: #11221b; -fx-padding: 24 18 20 18;">
+            <children>
+                <VBox spacing="4.0">
+                    <children>
+                        <Label style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;" text="GABORONE · BWP LEDGER" />
+                        <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #ffffff;" text="FNBB" />
+                        <Label fx:id="sessionLabel" style="-fx-font-size: 11px; -fx-text-fill: #a7f3d0;" text="Guest Session · Not Signed In" wrapText="true" />
+                    </children>
+                </VBox>
+
+                <Separator opacity="0.2" />
+
+                <VBox spacing="6.0">
+                    <children>
+                        <Label style="-fx-font-size: 10px; -fx-font-weight: bold; -fx-text-fill: #94a3b8;" text="WORKSPACE VIEWS" />
+                        <Button maxWidth="Infinity" onAction="#goToLoginTab" style="-fx-background-color: #1a3329; -fx-text-fill: #f8fafc; -fx-alignment: CENTER_LEFT; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 9 12;" text="01  Customer Sign In" />
+                        <Button maxWidth="Infinity" onAction="#goToRegisterTab" style="-fx-background-color: #1a3329; -fx-text-fill: #f8fafc; -fx-alignment: CENTER_LEFT; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 9 12;" text="02  Register Profile" />
+                        <Button maxWidth="Infinity" onAction="#goToDashboardTab" style="-fx-background-color: #047857; -fx-text-fill: #ffffff; -fx-alignment: CENTER_LEFT; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 9 12;" text="03  Accounts &amp; Ledger" />
+                    </children>
+                </VBox>
+
+                <Region VBox.vgrow="ALWAYS" />
+
+                <VBox spacing="8.0" style="-fx-background-color: #182e25; -fx-background-radius: 8; -fx-padding: 12;">
+                    <children>
+                        <Label style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #fde68a;" text="MONTHLY INTEREST" />
+                        <Label style="-fx-font-size: 11px; -fx-text-fill: #d1fae5;" text="Investment: 5.00% · Savings: 0.05%" wrapText="true" />
+                        <Button maxWidth="Infinity" onAction="#handleApplyMonthlyInterest" style="-fx-background-color: #d97706; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 12;" text="Run Interest Batch" />
+                    </children>
+                </VBox>
+
+                <Button maxWidth="Infinity" onAction="#handleLogout" style="-fx-background-color: transparent; -fx-border-color: #335244; -fx-border-radius: 6; -fx-text-fill: #cbd5e1; -fx-font-weight: bold; -fx-padding: 8 12;" text="End Session" />
+            </children>
+        </VBox>
+    </left>
+
+    <!-- Main Content Workspace -->
+    <center>
+        <TabPane fx:id="mainTabPane" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <!-- TAB 1: Asymmetric Sign-In Screen -->
+                <Tab text="Sign In">
+                    <content>
+                        <VBox alignment="CENTER" style="-fx-background-color: #f5f5f0; -fx-padding: 36;">
+                            <children>
+                                <HBox maxHeight="440.0" maxWidth="800.0" style="-fx-background-color: #ffffff; -fx-border-color: #e5e5dc; -fx-border-radius: 10; -fx-background-radius: 10;">
+                                    <children>
+                                        <!-- Left Product Overview Panel -->
+                                        <VBox prefWidth="330.0" spacing="14.0" style="-fx-background-color: #182e25; -fx-background-radius: 10 0 0 10; -fx-padding: 32;">
+                                            <children>
+                                                <Label style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #fbbf24;" text="BANKING SYSTEM" />
+                                                <Label style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #ffffff;" text="FNB Account Access" wrapText="true" />
+                                                <Separator opacity="0.2" />
+                                                <VBox spacing="10.0">
+                                                    <children>
+                                                        <Label style="-fx-font-size: 12px; -fx-text-fill: #ecfdf5;" text="• SavingsAccount: 0.05% monthly yield" wrapText="true">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font></Label>
+                                                        <Label prefHeight="30.0" prefWidth="274.0" style="-fx-font-size: 12px; -fx-text-fill: #ecfdf5;" text="• InvestmentAccount: 5.00% monthly (Min BWP 500)" wrapText="true" />
+                                                        <Label style="-fx-font-size: 12px; -fx-text-fill: #ecfdf5;" text="• ChequeAccount: Salary &amp; verified employment" wrapText="true" />
+                                                    </children>
+                                                </VBox>
+                                                <Region VBox.vgrow="ALWAYS" />
+                                            </children>
+                                        </VBox>
+
+                                        <!-- Right Credential Form -->
+                                        <VBox prefWidth="470.0" spacing="14.0" style="-fx-padding: 34;">
+                                            <children>
+                                                <Label style="-fx-font-size: 21px; -fx-font-weight: bold; -fx-text-fill: #11221b;" text="Customer Sign In" />
+                                                <Label style="-fx-font-size: 12px; -fx-text-fill: #64748b;" text="Authenticate your customer credentials." />
+
+                                                <VBox spacing="5.0">
+                                                    <children>
+                                                        <Label style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #334155;" text="Username" />
+                                                        <TextField fx:id="loginUsernameField" promptText="e.g. tshepang.s" />
+                                                    </children>
+                                                </VBox>
+
+                                                <VBox spacing="5.0">
+                                                    <children>
+                                                        <Label style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #334155;" text="Password" />
+                                                        <PasswordField fx:id="loginPasswordField" onAction="#handleLogin" promptText="Enter password" />
+                                                    </children>
+                                                </VBox>
+
+                                                <HBox spacing="10.0">
+                                                    <padding>
+                                                        <Insets top="6.0" />
+                                                    </padding>
+                                                    <children>
+                                                        <Button defaultButton="true" onAction="#handleLogin" style="-fx-background-color: #047857; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 9 20;" text="Sign-In" />
+                                                        <Button onAction="#goToRegisterTab" style="-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-font-weight: bold; -fx-padding: 9 16;" text="New Profile" />
+                                                    </children>
+                                                </HBox>
+
+                                                <Label fx:id="loginFeedbackLabel" wrapText="true" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+
+                <!-- TAB 2: Two-Card Split Registration -->
+                <Tab text="Register Profile">
+                    <content>
+                        <VBox spacing="16.0" style="-fx-background-color: #f5f5f0; -fx-padding: 24;">
+                            <children>
+                                <HBox alignment="CENTER_LEFT" spacing="12.0">
+                                    <children>
+                                        <VBox spacing="2.0">
+                                            <children>
+                                                <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #11221b;" text="Enroll Individual or Corporate Customer" />
+                                            </children>
+                                        </VBox>
+                                        <Region HBox.hgrow="ALWAYS" />
+                                        <Label style="-fx-font-size: 12px; -fx-font-weight: bold;" text="Account Class:" />
+                                        <ComboBox fx:id="regTypeCombo" onAction="#handleRegTypeChanged" prefWidth="190.0" />
+                                    </children>
+                                </HBox>
+
+                                <HBox spacing="16.0" VBox.vgrow="ALWAYS">
+                                    <children>
+                                        <!-- Left Card: Identity & Login -->
+                                        <VBox spacing="10.0" style="-fx-background-color: #ffffff; -fx-border-color: #e5e5dc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20;" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #047857;" text="Contact &amp; Credentials" />
+                                                <Separator />
+                                                <GridPane hgap="10.0" vgap="10.0">
+                                                    <columnConstraints>
+                                                        <ColumnConstraints minWidth="110.0" />
+                                                        <ColumnConstraints hgrow="ALWAYS" />
+                                                    </columnConstraints>
+                                                    <children>
+                                                        <Label text="First Name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                                        <TextField fx:id="regFirstNameField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                                                        <Label text="Surname" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                                        <TextField fx:id="regSurnameField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                                        <Label text="Email" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                                        <TextField fx:id="regEmailField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                                        <Label text="Phone" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                                        <TextField fx:id="regPhoneField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                                                        <Label text="Address" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                                        <TextField fx:id="regAddressField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                                                        <Label text="Username" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                                        <TextField fx:id="regUsernameField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                                                        <Label text="Password" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                                                        <PasswordField fx:id="regPasswordField" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                                    </children>
+                                       <rowConstraints>
+                                          <RowConstraints />
+                                          <RowConstraints />
+                                          <RowConstraints />
+                                          <RowConstraints />
+                                          <RowConstraints />
+                                          <RowConstraints />
+                                          <RowConstraints />
+                                       </rowConstraints>
+                                                </GridPane>
+                                            </children>
+                                        </VBox>
+
+                                        <!-- Right Card: Subclass Specific Attributes -->
+                                        <VBox spacing="12.0" style="-fx-background-color: #ffffff; -fx-border-color: #e5e5dc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 20;" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #b45309;" text="Classification Attributes" />
+                                                <Separator />
+                                                <GridPane hgap="10.0" vgap="10.0">
+                                                    <columnConstraints>
+                                                        <ColumnConstraints minWidth="120.0" />
+                                                        <ColumnConstraints hgrow="ALWAYS" />
+                                                    </columnConstraints>
+                                                    <children>
+                                                        <Label text="National ID" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                                        <TextField fx:id="regNationalIdField" promptText="IndividualCustomer" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                                                        <Label text="Date of Birth" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                                        <DatePicker fx:id="regDobPicker" prefWidth="240.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                                                        <Label text="Company Name" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                                        <TextField fx:id="regCompanyNameField" disable="true" promptText="CorporateCustomer" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                                                        <Label text="Company Address" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                                        <TextField fx:id="regCompanyAddressField" disable="true" promptText="CorporateCustomer" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                                                        <Label text="Reg. Number" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                                        <TextField fx:id="regNumberField" disable="true" promptText="BW-2026-XXXX" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                                    </children>
+                                       <rowConstraints>
+                                          <RowConstraints />
+                                          <RowConstraints />
+                                          <RowConstraints />
+                                          <RowConstraints />
+                                          <RowConstraints />
+                                       </rowConstraints>
+                                                </GridPane>
+
+                                                <Region VBox.vgrow="ALWAYS" />
+
+                                                <HBox spacing="10.0">
+                                                    <children>
+                                                        <Button onAction="#handleRegister" style="-fx-background-color: #047857; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 9 18;" text="Save Customer Profile" />
+                                                        <Button onAction="#goToLoginTab" style="-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-padding: 9 14;" text="Back to Sign In" />
+                                                    </children>
+                                                </HBox>
+                                                <Label fx:id="regFeedbackLabel" wrapText="true" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+
+                <!-- TAB 3: SplitPane + Accordion Account Workspace -->
+                <Tab fx:id="dashboardTab" text="Accounts &amp; Ledger">
+                    <content>
+                        <VBox spacing="14.0" style="-fx-background-color: #f5f5f0; -fx-padding: 18;">
+                            <children>
+                                <!-- 3-Metric Portfolio Strip -->
+                                <HBox spacing="12.0">
+                                    <children>
+                                        <VBox spacing="2.0" style="-fx-background-color: #ffffff; -fx-border-color: #e5e5dc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 14;" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #78716c;" text="TOTAL PORTFOLIO BALANCE" />
+                                                <Label fx:id="totalBalanceLabel" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #11221b;" text="BWP 0.00" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="2.0" style="-fx-background-color: #ffffff; -fx-border-color: #e5e5dc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 14;" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #78716c;" text="INTEREST SCHEDULE" />
+                                                <Label style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #047857;" text="5.00% Investment · 0.05% Savings" />
+                                            </children>
+                                        </VBox>
+                                        <VBox spacing="2.0" style="-fx-background-color: #ffffff; -fx-border-color: #e5e5dc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 14;" HBox.hgrow="ALWAYS">
+                                            <children>
+                                                <Label style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #78716c;" text="ACCOUNT RULES" />
+                                                <Label style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #b45309;" text="Min BWP 500 Inv · Verified Emp Cheque" />
+                                            </children>
+                                        </VBox>
+                                    </children>
+                                </HBox>
+
+                                <!-- SplitPane: Portfolio List | Accordion Controls + Ledger -->
+                                <SplitPane dividerPositions="0.33" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                                    <items>
+                                        <VBox spacing="8.0" style="-fx-background-color: #ffffff; -fx-border-color: #e5e5dc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 14;">
+                                            <children>
+                                                <Label style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #11221b;" text="Held Accounts" />
+                                                <ListView fx:id="accountListView" VBox.vgrow="ALWAYS" />
+                                            </children>
+                                        </VBox>
+
+                                        <VBox spacing="10.0" style="-fx-padding: 0 0 0 10;">
+                                            <children>
+                                                <Accordion fx:id="actionAccordion">
+                                                    <panes>
+                                                        <TitledPane fx:id="transactionsPane" text="Transact (Deposit / Withdraw / Transfer / Salary)">
+                                                            <content>
+                                                                <VBox spacing="10.0">
+                                                                    <children>
+                                                                        <HBox spacing="8.0">
+                                                                            <children>
+                                                                                <TextField fx:id="txAmountField" promptText="Amount (BWP)" HBox.hgrow="ALWAYS" />
+                                                                                <TextField fx:id="txReferenceField" promptText="Reference" HBox.hgrow="ALWAYS" />
+                                                                                <TextField fx:id="targetAccountField" promptText="Target Account (SAV-1001)" HBox.hgrow="ALWAYS" />
+                                                                            </children>
+                                                                        </HBox>
+                                                                        <HBox spacing="8.0">
+                                                                            <children>
+                                                                                <Button onAction="#handleDeposit" style="-fx-background-color: #047857; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 7 14;" text="Deposit" />
+                                                                                <Button onAction="#handleWithdraw" style="-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-padding: 7 14;" text="Withdraw" />
+                                                                                <Button onAction="#handleTransfer" style="-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-padding: 7 14;" text="Transfer" />
+                                                                                <Button onAction="#handleDepositSalary" style="-fx-background-color: #b45309; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 7 14;" text="Credit Salary" />
+                                                                            </children>
+                                                                        </HBox>
+                                                                    </children>
+                                                                </VBox>
+                                                            </content>
+                                                        </TitledPane>
+
+                                                        <TitledPane text="Open New Account (Savings / Investment / Cheque)">
+                                                            <content>
+                                                                <VBox spacing="10.0">
+                                                                    <children>
+                                                                        <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                                                            <children>
+                                                                                <ComboBox fx:id="newAccountTypeCombo" prefWidth="175.0" />
+                                                                                <ComboBox fx:id="branchCombo" prefWidth="105.0" />
+                                                                                <TextField fx:id="openingDepositField" promptText="Opening Deposit (BWP)" text="500.00" />
+                                                                                <CheckBox fx:id="employedCheckBox" selected="true" text="Employed" />
+                                                                            </children>
+                                                                        </HBox>
+                                                                        <HBox spacing="8.0">
+                                                                            <children>
+                                                                                <TextField fx:id="employerNameField" promptText="Employer Name (Cheque)" HBox.hgrow="ALWAYS" />
+                                                                                <TextField fx:id="employerAddressField" promptText="Employer Address (Cheque)" HBox.hgrow="ALWAYS" />
+                                                                                <Button onAction="#handleOpenAccount" style="-fx-background-color: #047857; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 7 14;" text="Create Account" />
+                                                                            </children>
+                                                                        </HBox>
+                                                                    </children>
+                                                                </VBox>
+                                                            </content>
+                                                        </TitledPane>
+                                                    </panes>
+                                                </Accordion>
+
+                                                <Label fx:id="accountStatusLabel" wrapText="true" />
+
+                                                <VBox spacing="6.0" style="-fx-background-color: #ffffff; -fx-border-color: #e5e5dc; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 14;" VBox.vgrow="ALWAYS">
+                                                    <children>
+                                                        <Label style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #11221b;" text="Transaction Audit Trail" />
+                                                        <ListView fx:id="transactionListView" VBox.vgrow="ALWAYS" />
+                                                    </children>
+                                                </VBox>
+                                            </children>
+                                        </VBox>
+                                    </items>
+                                </SplitPane>
+                            </children>
+                        </VBox>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+    </center>
+</BorderPane>

@@ -2,6 +2,7 @@ package com.bankingsystem.model;
 
 import com.bankingsystem.interfaces.InterestPayable;
 import com.bankingsystem.interfaces.Withdrawable;
+import java.time.LocalDate;
 
 /**
  * InvestmentAccount earns 5% monthly interest, allows withdrawals,
@@ -13,6 +14,17 @@ public class InvestmentAccount extends Account implements InterestPayable, Withd
 
     public InvestmentAccount(String accountNumber, double initialDeposit, String branchCode, String customerId) {
         super(accountNumber, validateOpeningDeposit(initialDeposit), branchCode, customerId);
+    }
+
+    public static InvestmentAccount fromPersistence(String accountNumber, double balance,
+                                                     String branchCode, String customerId,
+                                                     LocalDate dateOpened) {
+        return new InvestmentAccount(accountNumber, balance, branchCode, customerId, dateOpened);
+    }
+
+    private InvestmentAccount(String accountNumber, double initialBalance, String branchCode,
+                              String customerId, LocalDate dateOpened) {
+        super(accountNumber, initialBalance, branchCode, customerId, dateOpened);
     }
 
     private static double validateOpeningDeposit(double initialDeposit) {

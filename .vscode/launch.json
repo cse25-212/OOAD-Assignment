@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Banking System",
+            "request": "launch",
+            "mainClass": "com.bankingsystem.view.BankingApplication",
+            "projectName": "banking-system-core"
+        }
+    ]
+}

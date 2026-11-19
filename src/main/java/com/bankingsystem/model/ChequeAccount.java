@@ -1,6 +1,7 @@
 package com.bankingsystem.model;
 
 import com.bankingsystem.interfaces.Withdrawable;
+import java.time.LocalDate;
 
 /**
  * ChequeAccount used for salary credits and unlimited deposits/withdrawals up to balance.
@@ -13,7 +14,12 @@ public class ChequeAccount extends Account implements Withdrawable {
 
     public ChequeAccount(String accountNumber, double initialBalance, String branchCode,
                          String customerId, EmploymentDetails employmentDetails) {
-        super(accountNumber, initialBalance, branchCode, customerId);
+        this(accountNumber, initialBalance, branchCode, customerId, employmentDetails, LocalDate.now());
+    }
+
+    private ChequeAccount(String accountNumber, double initialBalance, String branchCode,
+                          String customerId, EmploymentDetails employmentDetails, LocalDate dateOpened) {
+        super(accountNumber, initialBalance, branchCode, customerId, dateOpened);
         if (employmentDetails == null || !employmentDetails.verifyDetails()) {
             throw new IllegalArgumentException(
                     "ChequeAccount can only be opened for an employed customer with verified employment details."
@@ -22,6 +28,13 @@ public class ChequeAccount extends Account implements Withdrawable {
         this.employmentDetails = employmentDetails;
         this.employerName = employmentDetails.getCompanyName();
         this.employerAddress = employmentDetails.getCompanyAddress();
+    }
+
+    public static ChequeAccount fromPersistence(String accountNumber, double balance,
+                                                 String branchCode, String customerId,
+                                                 EmploymentDetails employmentDetails,
+                                                 LocalDate dateOpened) {
+        return new ChequeAccount(accountNumber, balance, branchCode, customerId, employmentDetails, dateOpened);
     }
 
     @Override
