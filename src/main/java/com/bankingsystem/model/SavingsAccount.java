@@ -1,6 +1,7 @@
 package com.bankingsystem.model;
 
 import com.bankingsystem.interfaces.InterestPayable;
+import java.time.LocalDate;
 
 /**
  * SavingsAccount earns 0.05% monthly interest and does not allow any withdrawals.
@@ -10,6 +11,17 @@ public class SavingsAccount extends Account implements InterestPayable {
 
     public SavingsAccount(String accountNumber, double initialBalance, String branchCode, String customerId) {
         super(accountNumber, initialBalance, branchCode, customerId);
+    }
+
+    public static SavingsAccount fromPersistence(String accountNumber, double balance,
+                                                  String branchCode, String customerId,
+                                                  LocalDate dateOpened) {
+        return new SavingsAccount(accountNumber, balance, branchCode, customerId, dateOpened);
+    }
+
+    private SavingsAccount(String accountNumber, double initialBalance, String branchCode,
+                           String customerId, LocalDate dateOpened) {
+        super(accountNumber, initialBalance, branchCode, customerId, dateOpened);
     }
 
     @Override

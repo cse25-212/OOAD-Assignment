@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Banking System (JavaFX)",
+            "type": "process",
+            "command": "mvn.cmd",
+            "args": [
+                "javafx:run"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

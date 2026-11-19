@@ -10,6 +10,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class CoreModelTest {
 
     @Test
+    void accountLoadedFromPersistenceKeepsItsOriginalOpeningDate() {
+        LocalDate opened = LocalDate.of(2020, 4, 17);
+        Account account = SavingsAccount.fromPersistence("SAV-OLD", 100.00, "BR-001", "CUST-001", opened);
+
+        assertEquals(opened, account.getDateOpened());
+    }
+
+    @Test
     void investmentAccountRequiresMinimumOpeningDepositOf500() {
         assertThrows(IllegalArgumentException.class, () ->
                 new InvestmentAccount("INV-FAIL", 499.99, "BR-001", "CUST-001")
@@ -24,6 +32,10 @@ class CoreModelTest {
         SavingsAccount savings = new SavingsAccount("SAV-001", 10000.00, "BR-001", "CUST-001");
         assertFalse(savings.withdraw(100.00));
         assertEquals(10000.00, savings.getBalance(), 0.001);
+        Account destination = new InvestmentAccount("INV-DEST", 500.00, "BR-001", "CUST-001");
+        assertFalse(savings.transfer(100.00, destination));
+        assertEquals(10000.00, savings.getBalance(), 0.001);
+        assertEquals(500.00, destination.getBalance(), 0.001);
 
         double interest = savings.applyInterest();
         assertEquals(5.00, interest, 0.001);

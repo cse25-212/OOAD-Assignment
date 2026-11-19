@@ -1,21 +1,28 @@
 # CSE202 — Banking System (Part B: Core Model Implementation)
 
 Object-Oriented Analysis & Design with Java (BSc Computer Systems Engineering).
-This repository implements **Part B, Section 4 (Implementation of Core Model)** directly from the Banking System UML Class Diagram, ready for **GitHub Codespaces**.
+This repository implements the Banking System UML model with a JavaFX interface and SQLite persistence, ready for **GitHub Codespaces**.
 
-> **Scope Note (Week 4 Core Model):** As specified in Part B of the assignment, this stage implements the domain entities, interfaces, attributes, and business logic only—with strict separation from JavaFX GUI views (Week 5), controllers (Week 6), and JDBC persistence (Week 7).
+The domain model, JavaFX view/controller, and JDBC DAOs are separated into `model`, `view`, `controller`, and `dao` packages.
 
 ## Quick Start in GitHub Codespaces
 
 1. Open this folder as the root of your GitHub repository and launch a **Codespace**.
-2. Run the unit tests to verify all OOP rules and banking constraints:
+2. Run the unit tests:
    ```bash
    mvn test
    ```
-3. Run the core model demonstration program (`BankingSystem.main`):
+3. Launch the JavaFX banking application:
    ```bash
-   mvn compile exec:java
+   mvn javafx:run
    ```
+   The application initializes `banking_system.db` in the project directory and seeds sample records on first launch. The database is ignored by Git.
+
+   Sample sign-in: `tshepang.s` / `pass1234`.
+
+### Run from VS Code
+
+Open `src/main/java/com/bankingsystem/view/BankingApplication.java` and click **Run** above `main`. This launcher keeps JavaFX's `Application` subclass out of the JVM entry-point class, allowing the Java extension's Maven classpath launch to start the app.
 
 ## Core Model Architecture
 
@@ -37,3 +44,7 @@ This repository implements **Part B, Section 4 (Implementation of Core Model)** 
 - **Transactions & Audit**: `TransactionHistory`, `Transaction` (abstract), `Deposit`, `Withdrawal`, `Transfer`
 - **Cards**: `Card` (abstract), `DebitCard`, `CreditCard`
 - **Entry Point**: `BankingSystem`
+
+### Database (`com.bankingsystem.dao`)
+- SQLite is initialized at application startup. `CustomerDAO`, `AccountDAO`, and `TransactionDAO` persist customer profiles, account balances, and transaction history.
+- The database seeds ten sample customers and related account and transaction records the first time it is created.

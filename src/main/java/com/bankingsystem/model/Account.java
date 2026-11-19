@@ -21,6 +21,11 @@ public abstract class Account implements Depositable, Transferable {
     private final List<Card> cards;
 
     protected Account(String accountNumber, double initialBalance, String branchCode, String customerId) {
+        this(accountNumber, initialBalance, branchCode, customerId, LocalDate.now());
+    }
+
+    protected Account(String accountNumber, double initialBalance, String branchCode,
+                      String customerId, LocalDate dateOpened) {
         if (accountNumber == null || accountNumber.isBlank()) {
             throw new IllegalArgumentException("Account number must not be blank.");
         }
@@ -33,11 +38,14 @@ public abstract class Account implements Depositable, Transferable {
         if (initialBalance < 0) {
             throw new IllegalArgumentException("Initial balance cannot be negative.");
         }
+        if (dateOpened == null) {
+            throw new IllegalArgumentException("Account opening date must not be null.");
+        }
         this.accountNumber = accountNumber;
         this.balance = initialBalance;
         this.branchCode = branchCode;
         this.customerId = customerId;
-        this.dateOpened = LocalDate.now();
+        this.dateOpened = dateOpened;
         this.transactionHistory = new TransactionHistory();
         this.cards = new ArrayList<>();
         this.transactionHistory.logAudit(
@@ -69,7 +77,7 @@ public abstract class Account implements Depositable, Transferable {
         if (targetAccount == null || targetAccount == this || amount <= 0) {
             return false;
         }
-        if (!debit(amount)) {
+        if (!withdraw(amount)) {
             return false;
         }
         targetAccount.deposit(amount, "Transfer from " + this.accountNumber);
@@ -136,4 +144,10 @@ public abstract class Account implements Depositable, Transferable {
     public abstract boolean withdraw(double amount);
 
     public abstract String getAccountType();
+
+    @Override
+    public String toString() {
+        return String.format("%s · %s · BWP %.2f",
+                accountNumber, getAccountType(), balance);
+    }
 }
