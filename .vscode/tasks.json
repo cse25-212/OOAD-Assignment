@@ -2,12 +2,18 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "Compile Banking System",
+            "type": "shell",
+            "command": "mvn -q -DskipTests compile",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Run Banking System (JavaFX)",
-            "type": "process",
-            "command": "mvn.cmd",
-            "args": [
-                "javafx:run"
-            ],
+            "type": "shell",
+            "command": "mvn javafx:run",
             "options": {
                 "cwd": "${workspaceFolder}"
             },

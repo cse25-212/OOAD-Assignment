@@ -6,7 +6,8 @@
             "name": "Banking System",
             "request": "launch",
             "mainClass": "com.bankingsystem.view.BankingApplication",
-            "projectName": "banking-system-core"
+            "projectName": "banking-system-core",
+            "preLaunchTask": "Compile Banking System"
         }
     ]
 }
