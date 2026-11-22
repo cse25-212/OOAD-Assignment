@@ -10,4 +10,3 @@ target/
 banking_system.db
 banking_system.db-shm
 banking_system.db-wal
-banking_system.db.before-security-*.bak

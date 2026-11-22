@@ -7,30 +7,18 @@ The domain model, JavaFX view/controller, and JDBC DAOs are separated into `mode
 
 ## Quick Start in GitHub Codespaces
 
-1. Generate a 32-byte key (for example, run `openssl rand -base64 32`) and add it as the `BANKING_DATA_KEY` **Codespaces secret** in the repository or account settings. Keep the key outside the repository and retain the same key for future sessions; losing it makes encrypted customer data unrecoverable.
-2. Create or rebuild the **Codespace** so the secret is available in its environment.
-3. Run the unit tests:
+1. Open this folder as the root of your GitHub repository and launch a **Codespace**.
+2. Run the unit tests:
    ```bash
    mvn test
    ```
-4. Launch the JavaFX banking application:
+3. Launch the JavaFX banking application:
    ```bash
    mvn javafx:run
    ```
-   The application initializes `banking_system.db` in the project directory and seeds sample records on first launch. Legacy plaintext databases are backed up beside the database before migration. Both the database and migration backups are ignored by Git.
+   The application initializes `banking_system.db` in the project directory and seeds sample records on first launch. The database is ignored by Git.
 
    Sample sign-in: `tshepang.s` / `pass1234`.
-
-### Open the JavaFX desktop in Codespaces
-
-The Codespace provides a lightweight desktop through noVNC. Forwarded port `6080` opens in a browser; click **Connect** and enter the desktop password `vscode`. Start the JavaFX application from the Codespace terminal with `mvn javafx:run`; its window appears in that desktop. The Codespaces forwarded port remains access-controlled by GitHub.
-
-### Data protection and migration
-
-- Passwords are stored as salted PBKDF2 hashes. Customer contact/identity details and employment information are encrypted with AES-GCM; email uniqueness uses a keyed digest.
-- Set `BANKING_DATA_KEY` to a base64-encoded 32-byte secret before launching. In Codespaces, configure it as a Codespaces secret; for local development, set it in the shell or a secret manager. Never commit or rotate the key without first planning a data migration.
-- On the first startup against a legacy database, the app creates a `.before-security-<timestamp>.bak` backup, migrates existing credentials and PII, and preserves existing records and demo sign-ins. Keep the backup until the migrated database has been verified.
-- The test suite injects a test-only key and does not require the production secret.
 
 ### Run from VS Code
 

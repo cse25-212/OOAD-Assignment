@@ -50,29 +50,4 @@ public class TransactionHistory implements Auditable {
     public int getTotalTransactions() {
         return totalTransactions;
     }
-
-    public Snapshot snapshot() {
-        return new Snapshot(new ArrayList<>(transactions), new ArrayList<>(auditLogs));
-    }
-
-    public void restore(Snapshot snapshot) {
-        if (snapshot == null) {
-            throw new IllegalArgumentException("Transaction history snapshot cannot be null.");
-        }
-        transactions.clear();
-        transactions.addAll(snapshot.transactions);
-        auditLogs.clear();
-        auditLogs.addAll(snapshot.auditLogs);
-        totalTransactions = transactions.size();
-    }
-
-    public static final class Snapshot {
-        private final List<Transaction> transactions;
-        private final List<String> auditLogs;
-
-        private Snapshot(List<Transaction> transactions, List<String> auditLogs) {
-            this.transactions = transactions;
-            this.auditLogs = auditLogs;
-        }
-    }
 }

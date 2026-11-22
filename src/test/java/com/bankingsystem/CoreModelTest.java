@@ -54,19 +54,6 @@ class CoreModelTest {
     }
 
     @Test
-    void accountSnapshotRestoresBalanceAndAuditHistoryAfterFailedPersistence() {
-        SavingsAccount account = new SavingsAccount("SAV-SNAPSHOT", 100.00, "BR-001", "CUST-001");
-        Account.StateSnapshot snapshot = account.snapshotState();
-        int auditCount = account.getTransactionHistory().getAuditHistory().size();
-
-        account.deposit(25.00, "temporary update");
-        account.restoreState(snapshot);
-
-        assertEquals(100.00, account.getBalance(), 0.001);
-        assertEquals(auditCount, account.getTransactionHistory().getAuditHistory().size());
-    }
-
-    @Test
     void chequeAccountRequiresVerifiedEmploymentDetails() {
         EmploymentDetails unemployed = new EmploymentDetails("", "", false);
         assertThrows(IllegalArgumentException.class, () ->
@@ -84,8 +71,7 @@ class CoreModelTest {
     @Test
     void customerCanHoldAllThreeAccountTypesAndBatchInterestRunsPolymorphically() {
         Authentication auth = new Authentication("kabo.m", "pass1234");
-        assertFalse(auth.login());
-        assertTrue(auth.login("kabo.m", "pass1234"));
+        assertTrue(auth.login());
 
         IndividualCustomer customer = new IndividualCustomer(
                 "CUST-002", "Kabo", "Molefe", "kabo@bw.org", "+26771111111",

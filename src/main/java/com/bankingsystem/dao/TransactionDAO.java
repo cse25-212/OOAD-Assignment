@@ -27,9 +27,6 @@ public class TransactionDAO {
     ) {
     }
 
-    public record InterestEntry(Account account, String transactionId, double amount, String reference) {
-    }
-
     public void create(String transactionId, String accountNumber, String targetAccountNumber,
                        String txType, double amount, String reference, boolean executed) throws SQLException {
         try (Connection conn = DatabaseConnection.getConnection();
@@ -85,42 +82,6 @@ public class TransactionDAO {
                 conn.commit();
             } catch (SQLException exception) {
                 rollback(conn, exception);
-                throw exception;
-            }
-        }
-    }
-
-    public void persistInterestBatch(List<InterestEntry> entries) throws SQLException {
-        if (entries == null || entries.isEmpty()) {
-            return;
-        }
-
-        String updateSql = "UPDATE accounts SET balance = ? WHERE account_number = ?";
-        try (Connection conn = DatabaseConnection.getConnection()) {
-            conn.setAutoCommit(false);
-            try {
-                for (InterestEntry entry : entries) {
-                    if (entry.account() == null || entry.amount() <= 0) {
-                        throw new SQLException("Interest batch contains an invalid account or amount.");
-                    }
-                    try (PreparedStatement update = conn.prepareStatement(updateSql)) {
-                        update.setDouble(1, entry.account().getBalance());
-                        update.setString(2, entry.account().getAccountNumber());
-                        requireUpdatedAccount(update.executeUpdate(), entry.account().getAccountNumber());
-                    }
-                    try (PreparedStatement insert = transactionStatement(conn, entry.transactionId(),
-                            entry.account().getAccountNumber(), null, "INTEREST", entry.amount(),
-                            entry.reference(), true)) {
-                        insert.executeUpdate();
-                    }
-                }
-                conn.commit();
-            } catch (SQLException | RuntimeException exception) {
-                try {
-                    conn.rollback();
-                } catch (SQLException rollbackException) {
-                    exception.addSuppressed(rollbackException);
-                }
                 throw exception;
             }
         }
