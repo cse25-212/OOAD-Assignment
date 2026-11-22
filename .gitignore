@@ -7,6 +7,6 @@ target/
 .idea/
 *.iml
 .DS_Store
-banking_system.sb
+banking_system.db
 banking_system.db-shm
 banking_system.db-wal
