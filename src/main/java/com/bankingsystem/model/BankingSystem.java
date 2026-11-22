@@ -22,7 +22,7 @@ public class BankingSystem {
         bank.addStaff(officer);
 
         Authentication auth = new Authentication("tshepang.s", "Secure2026");
-        auth.login();
+        auth.login("tshepang.s", "Secure2026");
 
         IndividualCustomer customer = new IndividualCustomer(
                 "CUST-001",

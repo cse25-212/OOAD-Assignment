@@ -12,6 +12,9 @@ import java.util.List;
  * Demonstrates abstraction, encapsulation, method overloading, and polymorphism.
  */
 public abstract class Account implements Depositable, Transferable {
+    public record StateSnapshot(double balance, TransactionHistory.Snapshot transactionHistory) {
+    }
+
     private final String accountNumber;
     private double balance;
     private final String branchCode;
@@ -135,6 +138,18 @@ public abstract class Account implements Depositable, Transferable {
 
     public TransactionHistory getTransactionHistory() {
         return transactionHistory;
+    }
+
+    public StateSnapshot snapshotState() {
+        return new StateSnapshot(balance, transactionHistory.snapshot());
+    }
+
+    public void restoreState(StateSnapshot snapshot) {
+        if (snapshot == null || snapshot.transactionHistory() == null) {
+            throw new IllegalArgumentException("Account state snapshot cannot be null.");
+        }
+        setBalance(snapshot.balance());
+        transactionHistory.restore(snapshot.transactionHistory());
     }
 
     public List<Card> getCards() {

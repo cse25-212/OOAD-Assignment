@@ -5,6 +5,7 @@ import com.bankingsystem.model.ChequeAccount;
 import com.bankingsystem.model.EmploymentDetails;
 import com.bankingsystem.model.InvestmentAccount;
 import com.bankingsystem.model.SavingsAccount;
+import com.bankingsystem.security.CustomerDataCipher;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +19,18 @@ import java.util.Optional;
  * JDBC Data Access Object for polymorphic Account CRUD operations.
  */
 public class AccountDAO {
+    private final CustomerDataCipher dataCipher;
+
+    public AccountDAO() {
+        this(CustomerDataCipher.fromEnvironment());
+    }
+
+    public AccountDAO(CustomerDataCipher dataCipher) {
+        if (dataCipher == null) {
+            throw new IllegalArgumentException("Customer data cipher cannot be null.");
+        }
+        this.dataCipher = dataCipher;
+    }
 
     public void create(Account account) throws SQLException {
         String sql = """
@@ -47,8 +60,8 @@ public class AccountDAO {
                         ps.setString(9, null);
                     } else if (account instanceof ChequeAccount cheque) {
                         ps.setDouble(7, 0.0);
-                        ps.setString(8, cheque.getEmployerName());
-                        ps.setString(9, cheque.getEmployerAddress());
+                        ps.setString(8, dataCipher.encrypt(cheque.getEmployerName()));
+                        ps.setString(9, dataCipher.encrypt(cheque.getEmployerAddress()));
                     } else {
                         throw new SQLException("Unsupported account type: " + account.getAccountType());
                     }
@@ -162,8 +175,8 @@ public class AccountDAO {
             case "InvestmentAccount" -> InvestmentAccount.fromPersistence(number, balance, branchCode, customerId, dateOpened);
             case "ChequeAccount" -> {
                 EmploymentDetails emp = new EmploymentDetails(
-                        rs.getString("employer_name"),
-                        rs.getString("employer_address"),
+                        dataCipher.decrypt(rs.getString("employer_name")),
+                        dataCipher.decrypt(rs.getString("employer_address")),
                         true
                 );
                 emp.verifyDetails();
@@ -186,8 +199,8 @@ public class AccountDAO {
                 """;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, customerId);
-            ps.setString(2, details.getCompanyName());
-            ps.setString(3, details.getCompanyAddress());
+            ps.setString(2, dataCipher.encrypt(details.getCompanyName()));
+            ps.setString(3, dataCipher.encrypt(details.getCompanyAddress()));
             ps.setInt(4, details.isEmployed() ? 1 : 0);
             ps.setInt(5, details.verifyDetails() ? 1 : 0);
             ps.executeUpdate();

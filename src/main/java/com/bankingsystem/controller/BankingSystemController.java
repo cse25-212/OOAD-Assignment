@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.BooleanSupplier;
 
 public class BankingSystemController {
     @FXML private Label sessionLabel, loginFeedbackLabel, regFeedbackLabel, totalBalanceLabel, accountStatusLabel;
@@ -143,7 +144,7 @@ public class BankingSystemController {
                         value(regPhoneField), value(regAddressField), auth, value(regNationalIdField), dob);
                 ((IndividualCustomer) customer).openPersonalAccount();
             }
-            customerDAO.create(customer, password);
+            customerDAO.create(customer);
             customerSequence++;
             regFeedbackLabel.setText("Profile saved. Customer ID: " + customerId);
             clearRegistrationFields();
@@ -159,8 +160,10 @@ public class BankingSystemController {
         try {
             double amount = parseAmount(txAmountField);
             String reference = optionalReference(txReferenceField);
-            account.deposit(amount, reference);
-            persist(account, "DEPOSIT", amount, reference);
+            mutateAndPersist(account, "DEPOSIT", amount, reference, () -> {
+                account.deposit(amount, reference);
+                return true;
+            });
             setAccountStatus("Deposit completed.", true);
             refreshPortfolio();
         } catch (SQLException | RuntimeException exception) {
@@ -174,10 +177,9 @@ public class BankingSystemController {
         if (account == null) return;
         try {
             double amount = parseAmount(txAmountField);
-            boolean withdrawn = account.withdraw(amount);
-            if (withdrawn) {
-                persist(account, "WITHDRAWAL", amount, optionalReference(txReferenceField));
-            }
+            String reference = optionalReference(txReferenceField);
+            boolean withdrawn = mutateAndPersist(account, "WITHDRAWAL", amount, reference,
+                    () -> account.withdraw(amount));
             setAccountStatus(withdrawn ? "Withdrawal completed." : "Withdrawal was not permitted or exceeds the balance.", withdrawn);
             refreshPortfolio();
         } catch (SQLException | RuntimeException exception) {
@@ -196,11 +198,8 @@ public class BankingSystemController {
         }
         try {
             double amount = parseAmount(txAmountField);
-            boolean transferred = source.transfer(amount, target);
-            if (transferred) {
-                transactionDAO.persistTransfer(source, target, nextTransactionId(), amount,
-                        optionalReference(txReferenceField));
-            }
+            String reference = optionalReference(txReferenceField);
+            boolean transferred = transferAndPersist(source, target, amount, reference);
             setAccountStatus(transferred ? "Transfer completed." : "Transfer was not permitted.", transferred);
             refreshPortfolio();
         } catch (SQLException | RuntimeException exception) {
@@ -217,8 +216,10 @@ public class BankingSystemController {
         }
         try {
             double amount = parseAmount(txAmountField);
-            cheque.depositSalary(amount);
-            persist(cheque, "SALARY", amount, "Salary Credit");
+            mutateAndPersist(cheque, "SALARY", amount, "Salary Credit", () -> {
+                cheque.depositSalary(amount);
+                return true;
+            });
             setAccountStatus("Salary credit completed.", true);
             refreshPortfolio();
         } catch (SQLException | RuntimeException exception) {
@@ -268,25 +269,29 @@ public class BankingSystemController {
         for (Account account : activeCustomer.getAccounts()) {
             if (account instanceof InterestPayable payable) interestAccounts.add(payable);
         }
-        Map<Account, Double> oldBalances = new LinkedHashMap<>();
+        Map<Account, Account.StateSnapshot> snapshots = new LinkedHashMap<>();
         for (Account account : activeCustomer.getAccounts()) {
-            if (account instanceof InterestPayable) oldBalances.put(account, account.getBalance());
+            if (account instanceof InterestPayable) snapshots.put(account, account.snapshotState());
         }
-        int processed = new InterestCalculator().batchProcessMonthlyYield(interestAccounts);
         try {
-            for (Map.Entry<Account, Double> entry : oldBalances.entrySet()) {
+            int processed = new InterestCalculator().batchProcessMonthlyYield(interestAccounts);
+            List<TransactionDAO.InterestEntry> entries = new ArrayList<>();
+            for (Map.Entry<Account, Account.StateSnapshot> entry : snapshots.entrySet()) {
                 Account account = entry.getKey();
-                double interest = account.getBalance() - entry.getValue();
+                double interest = account.getBalance() - entry.getValue().balance();
                 if (interest > 0) {
-                    persist(account, "INTEREST", interest, "Monthly interest");
+                    entries.add(new TransactionDAO.InterestEntry(
+                            account, nextTransactionId(), interest, "Monthly interest"));
                 }
             }
-        } catch (SQLException exception) {
-            setAccountStatus("Interest was applied but could not be fully saved: " + exception.getMessage(), false);
+            transactionDAO.persistInterestBatch(entries);
+            setAccountStatus("Monthly interest batch applied to " + processed + " account(s).", true);
+        } catch (SQLException | RuntimeException exception) {
+            snapshots.forEach(Account::restoreState);
+            setAccountStatus("Interest was not saved: " + exception.getMessage(), false);
             refreshPortfolio();
             return;
         }
-        setAccountStatus("Monthly interest batch applied to " + processed + " account(s).", true);
         refreshPortfolio();
     }
 
@@ -344,9 +349,37 @@ public class BankingSystemController {
         }
     }
 
-    private void persist(Account account, String type, double amount, String reference) throws SQLException {
-        transactionDAO.persistBalanceAndTransaction(
-                account, nextTransactionId(), type, amount, reference);
+    private boolean mutateAndPersist(Account account, String type, double amount, String reference,
+                                     BooleanSupplier mutation) throws SQLException {
+        Account.StateSnapshot snapshot = account.snapshotState();
+        try {
+            if (!mutation.getAsBoolean()) {
+                return false;
+            }
+            transactionDAO.persistBalanceAndTransaction(
+                    account, nextTransactionId(), type, amount, reference);
+            return true;
+        } catch (SQLException | RuntimeException exception) {
+            account.restoreState(snapshot);
+            throw exception;
+        }
+    }
+
+    private boolean transferAndPersist(Account source, Account target, double amount, String reference)
+            throws SQLException {
+        Account.StateSnapshot sourceSnapshot = source.snapshotState();
+        Account.StateSnapshot targetSnapshot = target.snapshotState();
+        try {
+            if (!source.transfer(amount, target)) {
+                return false;
+            }
+            transactionDAO.persistTransfer(source, target, nextTransactionId(), amount, reference);
+            return true;
+        } catch (SQLException | RuntimeException exception) {
+            source.restoreState(sourceSnapshot);
+            target.restoreState(targetSnapshot);
+            throw exception;
+        }
     }
 
     private String nextTransactionId() {
