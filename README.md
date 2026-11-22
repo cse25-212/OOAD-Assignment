@@ -1,4 +1,4 @@
-# CSE202 — Banking System (Part B: Core Model Implementation)
+# CSE212 — Banking System (Part B: Core Model Implementation)
 
 Object-Oriented Analysis & Design with Java (BSc Computer Systems Engineering).
 This repository implements the Banking System UML model with a JavaFX interface and SQLite persistence, ready for **GitHub Codespaces**.
