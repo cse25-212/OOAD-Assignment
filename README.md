@@ -47,4 +47,4 @@ Open `src/main/java/com/bankingsystem/view/BankingApplication.java` and click **
 
 ### Database (`com.bankingsystem.dao`)
 - SQLite is initialized at application startup. `CustomerDAO`, `AccountDAO`, and `TransactionDAO` persist customer profiles, account balances, and transaction history.
-- The database seeds ten sample customers and related account and transaction records the first time it is created.
+- The database seeds ten sample customers and related account and transaction records the first time it is created
