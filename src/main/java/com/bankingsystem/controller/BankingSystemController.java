@@ -9,7 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import java.sql.SQLException;
-import java.time.LocalDate
+import java.time.LocalDate;
 import java.util.*;
 
 public class BankingSystemController {
