@@ -1,6 +1,5 @@
 package com.bankingsystem.model;
 
-import com.bankingsystem.interfaces.InterestPayable;
 import java.time.LocalDate;
 import java.util.List;
 
