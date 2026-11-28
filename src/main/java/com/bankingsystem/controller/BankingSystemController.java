@@ -15,7 +15,6 @@ import java.util.*;
 public class BankingSystemController {
     @FXML private Label sessionLabel, loginFeedbackLabel, regFeedbackLabel, totalBalanceLabel, accountStatusLabel;
     @FXML private TabPane mainTabPane;
-    @FXML private Tab dashboardTab;
     @FXML private TextField loginUsernameField, loginPasswordField;
     @FXML private ComboBox<String> regTypeCombo, newAccountTypeCombo, branchCombo;
     @FXML private TextField regFirstNameField, regSurnameField, regEmailField, regPhoneField, regAddressField;
@@ -27,7 +26,6 @@ public class BankingSystemController {
     @FXML private CheckBox employedCheckBox;
     @FXML private ListView<Account> accountListView;
     @FXML private ListView<String> transactionListView;
-    @FXML private Accordion actionAccordion;
 
     private final CustomerDAO customerDAO = new CustomerDAO();
     private final AccountDAO accountDAO = new AccountDAO();
@@ -236,19 +234,17 @@ public class BankingSystemController {
             double openingDeposit = Double.parseDouble(value(openingDepositField));
             String branchCode = value(branchCombo);
             String accountNumber = nextAccountNumber();
-            Account account;
-            switch (value(newAccountTypeCombo)) {
-                case "InvestmentAccount":
-                    account = new InvestmentAccount(accountNumber, openingDeposit, branchCode, activeCustomer.getCustomerID());
-                    break;
-                case "ChequeAccount":
+            Account account = switch (value(newAccountTypeCombo)) {
+                case "InvestmentAccount" ->
+                        new InvestmentAccount(accountNumber, openingDeposit, branchCode, activeCustomer.getCustomerID());
+                case "ChequeAccount" -> {
                     EmploymentDetails employment = new EmploymentDetails(
                             value(employerNameField), value(employerAddressField), employedCheckBox.isSelected());
-                    account = new ChequeAccount(accountNumber, openingDeposit, branchCode, activeCustomer.getCustomerID(), employment);
-                    break;
-                default:
-                    account = new SavingsAccount(accountNumber, openingDeposit, branchCode, activeCustomer.getCustomerID());
-            }
+                    yield new ChequeAccount(
+                            accountNumber, openingDeposit, branchCode, activeCustomer.getCustomerID(), employment);
+                }
+                default -> new SavingsAccount(accountNumber, openingDeposit, branchCode, activeCustomer.getCustomerID());
+            };
             accountDAO.create(account);
             activeCustomer.addAccount(account);
             setAccountStatus(account.getAccountType() + " created: " + accountNumber, true);

@@ -19,9 +19,10 @@ class CoreModelTest {
 
     @Test
     void investmentAccountRequiresMinimumOpeningDepositOf500() {
-        assertThrows(IllegalArgumentException.class, () ->
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
                 new InvestmentAccount("INV-FAIL", 499.99, "BR-001", "CUST-001")
         );
+        assertTrue(exception.getMessage().contains("minimum opening deposit"));
 
         InvestmentAccount valid = new InvestmentAccount("INV-OK", 500.00, "BR-001", "CUST-001");
         assertEquals(500.00, valid.getBalance(), 0.001);
@@ -56,9 +57,10 @@ class CoreModelTest {
     @Test
     void chequeAccountRequiresVerifiedEmploymentDetails() {
         EmploymentDetails unemployed = new EmploymentDetails("", "", false);
-        assertThrows(IllegalArgumentException.class, () ->
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () ->
                 new ChequeAccount("CHQ-FAIL", 0.0, "BR-001", "CUST-001", unemployed)
         );
+        assertTrue(exception.getMessage().contains("employed customer"));
 
         EmploymentDetails employed = new EmploymentDetails("BAC Tech", "Gaborone", true);
         ChequeAccount cheque = new ChequeAccount("CHQ-OK", 100.0, "BR-001", "CUST-001", employed);
