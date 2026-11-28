@@ -7,7 +7,7 @@ The domain model, JavaFX view/controller, and JDBC DAOs are separated into `mode
 
 ## Quick Start in GitHub Codespaces
 
-1. Open this folder as the root of your GitHub repository and launch a **Codespace**. If you already have a Codespace, run **Codespaces: Rebuild Container** after pulling these configuration changes. The dev container installs JDK 25 for the VS Code Java extension, Java 21 as an additional JDK, a lightweight desktop, and JavaFX's Linux libraries. Maven continues to compile the project for Java 21.
+1. Open this folder as the root of your GitHub repository and launch a **Codespace**. If you already have a Codespace, run **Codespaces: Rebuild Container** after pulling these configuration changes. The dev container installs a lightweight desktop and JavaFX's Linux libraries.
 2. Open the forwarded **Banking System Desktop (noVNC)** port (6080) in your browser. If asked, click **Connect** and enter `vscode`.
 3. Run the unit tests in the VS Code terminal:
    ```bash
