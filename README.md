@@ -13,7 +13,8 @@ The domain model, JavaFX view/controller, and JDBC DAOs are separated into `mode
    ```bash
    mvn test
    ```
-3. Launch the JavaFX banking application:
+3. Open the **Ports** tab and open port **6080** in your browser. This private port provides the Codespace desktop; the desktop password is `vscode`.
+4. Launch the JavaFX banking application:
    ```bash
    mvn javafx:run
    ```

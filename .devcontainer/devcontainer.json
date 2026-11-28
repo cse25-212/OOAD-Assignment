@@ -1,12 +1,31 @@
 {
   "name": "CSE212 Banking System (JDK 25, Java 21 target)",
-  "image": "mcr.microsoft.com/devcontainers/java:1-21-bullseye",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
   "features": {
     "ghcr.io/devcontainers/features/java:1": {
       "version": "25",
       "additionalVersions": "21",
       "installMaven": "true"
+    },
+    "ghcr.io/devcontainers/features/desktop-lite:1": {
+      "password": "vscode"
     }
+  },
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": {
+      "label": "Banking System Desktop (noVNC)",
+      "onAutoForward": "openBrowser",
+      "visibility": "private"
+    }
+  },
+  "remoteEnv": {
+    "DISPLAY": ":1",
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "JAVA_TOOL_OPTIONS": "-Dprism.order=sw"
   },
   "customizations": {
     "vscode": {
@@ -24,5 +43,7 @@
       }
     }
   },
-  "postCreateCommand": "mvn test-compile"
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y libgtk-3-0 libxtst6 libxi6 libxrender1 libasound2 libgl1 && mvn test-compile",
+  "postStartCommand": "sudo /usr/local/share/desktop-init.sh",
+  "runArgs": ["--shm-size=1g"]
 }
