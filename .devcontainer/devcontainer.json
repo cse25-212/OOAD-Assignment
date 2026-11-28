@@ -1,12 +1,13 @@
 {
-  "name": "CSE212 Banking System (Java 21 Codespace)",
+  "name": "CSE212 Banking System (JDK 25, Java 21 target)",
   "build": {
     "dockerfile": "Dockerfile",
     "context": "."
   },
   "features": {
     "ghcr.io/devcontainers/features/java:1": {
-      "version": "21",
+      "version": "25",
+      "additionalVersions": "21",
       "installMaven": "true"
     },
     "ghcr.io/devcontainers/features/desktop-lite:1": {
