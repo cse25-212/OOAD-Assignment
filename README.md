@@ -8,7 +8,7 @@ The domain model, JavaFX view/controller, and JDBC DAOs are separated into `mode
 ## Quick Start in GitHub Codespaces
 
 1. Open this folder as the root of your GitHub repository and launch a **Codespace**.
-   The dev container installs JDK 25 for the VS Code Java extension and JDK 21 as an additional runtime; Maven compiles the project for Java 21.
+   The dev container installs JDK 25 for the VS Code Java language server, configures the Java debugger and test extensions, and installs JDK 21 as an additional runtime; Maven compiles the project for Java 21.
 2. Run the unit tests:
    ```bash
    mvn test
