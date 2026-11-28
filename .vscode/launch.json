@@ -7,8 +7,7 @@
             "request": "launch",
             "mainClass": "com.bankingsystem.view.BankingApplication",
             "projectName": "banking-system-core",
-            "preLaunchTask": "Compile Banking System",
-            "vmArgs": "-Dprism.order=sw"
+            "preLaunchTask": "Compile Banking System"
         }
     ]
 }

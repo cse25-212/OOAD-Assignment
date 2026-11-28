@@ -7,17 +7,16 @@ The domain model, JavaFX view/controller, and JDBC DAOs are separated into `mode
 
 ## Quick Start in GitHub Codespaces
 
-1. Open this folder as the root of your GitHub repository and launch a **Codespace**. If you already have a Codespace, run **Codespaces: Rebuild Container** after pulling these configuration changes. The dev container installs a lightweight desktop and JavaFX's Linux libraries.
-2. Open the forwarded **Banking System Desktop (noVNC)** port (6080) in your browser. If asked, click **Connect** and enter `vscode`.
-3. Run the unit tests in the VS Code terminal:
+1. Open this folder as the root of your GitHub repository and launch a **Codespace**.
+2. Run the unit tests:
    ```bash
    mvn test
    ```
-4. Launch the JavaFX banking application from the VS Code task **Run Banking System (JavaFX)**, or run:
+3. Launch the JavaFX banking application:
    ```bash
    mvn javafx:run
    ```
-   The application window appears in the noVNC desktop in your browser. The application initializes `banking_system.db` in the project directory and seeds sample records on first launch. The database is ignored by Git.
+   The application initializes `banking_system.db` in the project directory and seeds sample records on first launch. The database is ignored by Git.
 
    Sample sign-in: `tshepang.s` / `pass1234`.
 
