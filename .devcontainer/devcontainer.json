@@ -17,6 +17,7 @@
         "vscjava.vscode-java-test"
       ],
       "settings": {
+        "java.jdt.ls.java.home": "/usr/local/sdkman/candidates/java/current",
         "java.configuration.updateBuildConfiguration": "automatic",
         "editor.tabSize": 4
       }
