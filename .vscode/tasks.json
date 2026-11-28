@@ -15,7 +15,11 @@
             "type": "shell",
             "command": "mvn javafx:run",
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "DISPLAY": ":1",
+                    "LIBGL_ALWAYS_SOFTWARE": "1"
+                }
             },
             "problemMatcher": []
         }

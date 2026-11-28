@@ -5,7 +5,23 @@
     "ghcr.io/devcontainers/features/java:1": {
       "version": "21",
       "installMaven": "true"
+    },
+    "ghcr.io/devcontainers/features/desktop-lite:1": {
+      "password": "vscode"
     }
+  },
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": {
+      "label": "Banking System Desktop (noVNC)",
+      "onAutoForward": "openBrowser",
+      "visibility": "private"
+    }
+  },
+  "remoteEnv": {
+    "DISPLAY": ":1",
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "JAVA_TOOL_OPTIONS": "-Dprism.order=sw"
   },
   "customizations": {
     "vscode": {
@@ -21,5 +37,7 @@
       }
     }
   },
-  "postCreateCommand": "mvn test-compile"
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y libgtk-3-0 libxtst6 libxi6 libxrender1 libasound2 libgl1 && mvn test-compile",
+  "postStartCommand": "sudo /usr/local/share/desktop-init.sh",
+  "runArgs": ["--shm-size=1g"]
 }
